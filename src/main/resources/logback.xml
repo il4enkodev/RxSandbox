@@ -1,0 +1,16 @@
+<configuration>
+    <appender name="COLORIZED" class="com.github.il4enkodev.sandbox.rx.log.ColorizedAppender">
+        <encoder class="com.github.il4enkodev.sandbox.rx.log.ColorizedEncoder">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %logger{0} - %highlight(%msg%n)</pattern>
+        </encoder>
+    </appender>
+    <appender name="DEFAULT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{0} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="trace">
+        <appender-ref ref="COLORIZED" />
+    </root>
+</configuration>
