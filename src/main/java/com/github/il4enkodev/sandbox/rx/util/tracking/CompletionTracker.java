@@ -19,6 +19,7 @@ public final class CompletionTracker extends Thread {
         RxJavaPlugins.setOnSingleSubscribe(service::onSingleSubscribe);
         RxJavaPlugins.setOnObservableSubscribe(service::onObservableSubscribe);
         RxJavaPlugins.setOnFlowableSubscribe(service::onFlowableSubscribe);
+        RxJavaPlugins.lockdown();
 
         service.start();
     }
@@ -27,6 +28,8 @@ public final class CompletionTracker extends Thread {
     private final Runnable action;
 
     private CompletionTracker(Runnable action) {
+        super("CompletionTracker");
+        setDaemon(true);
         this.phaser = new Phaser();
         this.action = action;
     }

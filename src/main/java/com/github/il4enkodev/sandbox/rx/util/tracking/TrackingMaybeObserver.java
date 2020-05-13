@@ -28,26 +28,26 @@ final class TrackingMaybeObserver<T> implements Disposable, MaybeObserver<T> {
 
     @Override
     public void onSuccess(T t) {
-        ticket.cancel();
         downstream.onSuccess(t);
+        ticket.cancel();
     }
 
     @Override
     public void onError(Throwable e) {
-        ticket.cancel();
         downstream.onError(e);
+        ticket.cancel();
     }
 
     @Override
     public void onComplete() {
-        ticket.cancel();
         downstream.onComplete();
+        ticket.cancel();
     }
 
     @Override
     public void dispose() {
-        ticket.cancel();
         DisposableHelper.dispose(upstream);
+        ticket.cancel();
     }
 
     @Override

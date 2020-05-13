@@ -28,20 +28,20 @@ final class TrackingSingleObserver<T> implements Disposable, SingleObserver<T> {
 
     @Override
     public void onSuccess(T t) {
-        ticket.cancel();
         downstream.onSuccess(t);
+        ticket.cancel();
     }
 
     @Override
     public void onError(Throwable e) {
-        ticket.cancel();
         downstream.onError(e);
+        ticket.cancel();
     }
 
     @Override
     public void dispose() {
-        ticket.cancel();
         DisposableHelper.dispose(upstream);
+        ticket.cancel();
     }
 
     @Override

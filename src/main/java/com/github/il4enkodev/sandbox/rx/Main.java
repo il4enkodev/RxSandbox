@@ -22,9 +22,9 @@ public class Main {
         Thread.currentThread().setName("MainThread");
 
         // triggered when there are no active Observers/Subscribers
-        CompletionTracker.install(() -> Main.scheduler().shutdown());
+        CompletionTracker.install(scheduler::shutdown);
 
-        // run event loop here until shutdown() is called or MainThread is interrupted
+        // run event loop here until shutdown() is called
         scheduler.execute(new Application(args));
 
         logger.trace("main() finished");

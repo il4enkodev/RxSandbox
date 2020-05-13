@@ -28,20 +28,20 @@ final class TrackingCompletableObserver implements Disposable, CompletableObserv
 
     @Override
     public void onComplete() {
-        ticket.cancel();
         downstream.onComplete();
+        ticket.cancel();
     }
 
     @Override
     public void onError(Throwable e) {
-        ticket.cancel();
         downstream.onError(e);
+        ticket.cancel();
     }
 
     @Override
     public void dispose() {
-        ticket.cancel();
         DisposableHelper.dispose(upstream);
+        ticket.cancel();
     }
 
     @Override
