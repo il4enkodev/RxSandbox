@@ -1,7 +1,7 @@
 package com.github.il4enkodev.sandbox.rx;
 
-import com.github.il4enkodev.sandbox.rx.util.LoggingSubscribers;
-import com.github.il4enkodev.sandbox.rx.util.RunBlockingScheduler;
+import com.github.il4enkodev.sandbox.rx.util.tracking.CompletionTracker;
+import hu.akarnokd.rxjava2.schedulers.BlockingScheduler;
 import io.reactivex.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private static final RunBlockingScheduler scheduler = new RunBlockingScheduler();
+    private static final BlockingScheduler scheduler = new BlockingScheduler();
 
     public static Scheduler scheduler() {
         return scheduler;
@@ -22,11 +22,10 @@ public class Main {
         Thread.currentThread().setName("MainThread");
 
         // triggered when there are no active Observers/Subscribers
-        // created using factory method of LoggingSubscribers class
-        LoggingSubscribers.runAfterAllFinished(() -> Main.scheduler().shutdown());
+        CompletionTracker.install(() -> Main.scheduler().shutdown());
 
-        // run event loop here until shutdown() called or MainThread is interrupted
-        scheduler.start(new Application(args));
+        // run event loop here until shutdown() is called or MainThread is interrupted
+        scheduler.execute(new Application(args));
 
         logger.trace("main() finished");
     }

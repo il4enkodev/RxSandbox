@@ -106,27 +106,18 @@ public final class LoggingSubscribers {
         validate(level, name, requested);
         //noinspection ResultOfMethodCallIgnored
         ObjectHelper.verifyPositive(requested, "requested");
-        final LoggingSubscriber<T> subscriber = new LoggingSubscriber<>(level, name, requested);
-        tracker.add(subscriber);
-        return subscriber;
+        return new LoggingSubscriber<>(level, name, requested);
     }
 
     private static <T> LoggingObserver<T> create(Level level, String name) {
         validate(level, name);
-        final LoggingObserver<T> observer = new LoggingObserver<>(level, name);
-        tracker.add(observer);
-        return observer;
+        return new LoggingObserver<>(level, name);
     }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private static void validate(Level level, String name, long requested) {
         validate(level, name);
         ObjectHelper.verifyPositive(requested, "requested");
-    }
-
-    private static final CompletionTracker tracker = new CompletionTracker();
-    public static void runAfterAllFinished(Runnable action) {
-        tracker.setOnCompleteAction(action);
     }
 
     private static void validate(Level level, String name) {

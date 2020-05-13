@@ -1,10 +1,15 @@
 package com.github.il4enkodev.sandbox.rx;
 
 
+import io.reactivex.functions.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Application implements Runnable {
+import java.util.concurrent.TimeUnit;
+
+import static com.github.il4enkodev.sandbox.rx.util.LoggingSubscribers.*;
+
+public class Application implements Action {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
@@ -18,6 +23,21 @@ public class Application implements Runnable {
     @Override
     public void run() {
         logger.trace("Application started");
-        // Sandbox here
+
+        // sandbox here
+
+        logger.trace("Application finished");
+    }
+
+    static void exit() {
+        Main.scheduler().shutdown();
+    }
+
+    static void sleep(TimeUnit unit, long timeout) {
+        try {
+            unit.sleep(timeout);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 }

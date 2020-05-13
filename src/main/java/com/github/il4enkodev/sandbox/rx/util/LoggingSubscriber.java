@@ -1,6 +1,5 @@
 package com.github.il4enkodev.sandbox.rx.util;
 
-import com.github.il4enkodev.sandbox.rx.util.CompletionTracker.Trackable;
 import io.reactivex.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.internal.util.EndConsumerHelper;
 import org.reactivestreams.Subscription;
@@ -11,9 +10,8 @@ import org.slf4j.spi.LocationAwareLogger;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
-public class LoggingSubscriber<T> implements DisposableSubscriber<T>, LoggingSupport, Trackable {
+public class LoggingSubscriber<T> implements DisposableSubscriber<T>, LoggingSupport {
 
     private static final LocationAwareLogger logger =
             (LocationAwareLogger) LoggerFactory.getLogger(LoggingSubscribers.class);
@@ -21,8 +19,6 @@ public class LoggingSubscriber<T> implements DisposableSubscriber<T>, LoggingSup
     private final Level level;
     private final String name;
     private final long requested;
-
-    private final AtomicReference<Consumer<Trackable>> tracker = new AtomicReference<>();
 
     final AtomicReference<Subscription> upstream = new AtomicReference<>();
     private final AtomicInteger counter = new AtomicInteger();
@@ -50,20 +46,17 @@ public class LoggingSubscriber<T> implements DisposableSubscriber<T>, LoggingSup
     @Override
     public void onError(Throwable t) {
         error(t);
-        finished();
     }
 
     @Override
     public void onComplete() {
         complete();
-        finished();
     }
 
     @Override
     public void dispose() {
         if (SubscriptionHelper.cancel(upstream)) {
             unsubscribed();
-            finished();
         }
     }
 
@@ -94,17 +87,5 @@ public class LoggingSubscriber<T> implements DisposableSubscriber<T>, LoggingSup
     @Override
     public Level level() {
         return level;
-    }
-
-    void finished() {
-        final Consumer<Trackable> tracker = this.tracker.getAndSet(null);
-        if (tracker != null) {
-            tracker.accept(this);
-        }
-    }
-
-    @Override
-    public void setCompletionTracker(Consumer<Trackable> tracker) {
-        this.tracker.set(tracker);
     }
 }
