@@ -46,6 +46,6 @@ final class TrackingCompletableObserver implements Disposable, CompletableObserv
 
     @Override
     public boolean isDisposed() {
-        return DisposableHelper.isDisposed(upstream.get());
+        return upstream.get().isDisposed();
     }
 }

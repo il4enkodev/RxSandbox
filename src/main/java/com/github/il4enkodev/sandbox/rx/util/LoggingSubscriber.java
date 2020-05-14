@@ -11,7 +11,7 @@ import org.slf4j.spi.LocationAwareLogger;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class LoggingSubscriber<T> implements DisposableSubscriber<T>, LoggingSupport {
+final class LoggingSubscriber<T> implements DisposableSubscriber<T>, LoggingSupport {
 
     private static final LocationAwareLogger logger =
             (LocationAwareLogger) LoggerFactory.getLogger(LoggingSubscribers.class);
@@ -23,7 +23,7 @@ public class LoggingSubscriber<T> implements DisposableSubscriber<T>, LoggingSup
     final AtomicReference<Subscription> upstream = new AtomicReference<>();
     private final AtomicInteger counter = new AtomicInteger();
 
-    public LoggingSubscriber(Level level, String name, long requested) {
+    LoggingSubscriber(Level level, String name, long requested) {
         this.level = level;
         this.name = name;
         this.requested = requested;

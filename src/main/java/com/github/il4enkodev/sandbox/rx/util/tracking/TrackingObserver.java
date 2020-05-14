@@ -50,6 +50,6 @@ final class TrackingObserver<T> implements Disposable, Observer<T> {
 
     @Override
     public boolean isDisposed() {
-        return DisposableHelper.isDisposed(upstream.get());
+        return upstream.get().isDisposed();
     }
 }
