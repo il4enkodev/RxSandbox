@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.github.il4enkodev.sandbox.rx.util.LoggingSubscribers.*;
-
 public class Application implements Action {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
@@ -25,15 +23,13 @@ public class Application implements Action {
         logger.trace("Application started");
 
         // sandbox here
-
-        logger.trace("Application finished");
     }
 
     static void exit() {
         Main.scheduler().shutdown();
     }
 
-    static void sleep(TimeUnit unit, long timeout) {
+    static void sleep(long timeout, TimeUnit unit) {
         try {
             unit.sleep(timeout);
         } catch (InterruptedException e) {

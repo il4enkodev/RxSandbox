@@ -4,13 +4,15 @@ import io.reactivex.*;
 import io.reactivex.plugins.RxJavaPlugins;
 import org.reactivestreams.Subscriber;
 
-import java.util.Objects;
-import java.util.concurrent.Phaser;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.util.Objects.requireNonNull;
 
 public final class CompletionTracker extends Thread {
 
     public static void install(Runnable action) {
-        Objects.requireNonNull(action, "action is null");
+        requireNonNull(action, "action is null");
 
         final CompletionTracker service = new CompletionTracker(action);
 
@@ -24,20 +26,26 @@ public final class CompletionTracker extends Thread {
         service.start();
     }
 
-    private final Phaser phaser;
+    private final CountDownLatch latch;
+    private final AtomicInteger counter;
     private final Runnable action;
 
     private CompletionTracker(Runnable action) {
         super("CompletionTracker");
         setDaemon(true);
-        this.phaser = new Phaser();
-        this.action = action;
+        this.action = requireNonNull(action, "action is null");
+        latch = new CountDownLatch(1);
+        counter = new AtomicInteger();
     }
 
     @Override
     public void run() {
-        phaser.awaitAdvance(0);
-        action.run();
+        try {
+            latch.await();
+        } catch (InterruptedException ignore) {
+        } finally {
+            action.run();
+        }
     }
 
     CompletableObserver onCompletableSubscribe(Completable source, CompletableObserver observer) {
@@ -61,6 +69,6 @@ public final class CompletionTracker extends Thread {
     }
 
     private TrackingTicket ticket() {
-        return new TrackingTicket(phaser);
+        return new TrackingTicket(latch, counter);
     }
 }

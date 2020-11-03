@@ -39,7 +39,7 @@ interface LoggingSupport {
 
     default void log(String format, Throwable t, Object... args) {
         final LocationAwareLogger logger = (LocationAwareLogger) logger();
-        logger.log(null, logger.getName(), Level.ERROR.toInt(), format, args, t);
+        logger.log(null, logger.getName(), t != null ? Level.ERROR.toInt() : level().toInt(), format, args, t);
     }
 
     static String ordinal(int i) {

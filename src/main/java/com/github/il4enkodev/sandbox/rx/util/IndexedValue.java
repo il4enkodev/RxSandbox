@@ -73,9 +73,8 @@ public final class IndexedValue<T> {
         public void accept(T next) throws Exception {
             if (condition.test(next)){
                 value = next;
-                index = Math.abs(index);
             } else {
-                --index;
+                ++index;
             }
         }
     }
